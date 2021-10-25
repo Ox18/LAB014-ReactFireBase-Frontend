@@ -1,24 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import AuthComponent from "./presentation/view/auth/AuthComponent";
+import AuthViewModelImpl from "./presentation/view-model/auth/AuthViewModelImpl";
+import AuthFakeApi from "./data/auth/AuthFakeApi";
+import LoginUseCase from "./domain/interactors/auth/LoginUseCase";
+import AuthHolder from "./domain/entity/auth/models/AuthHolder";
 
-function App() {
+function App(): JSX.Element {
+  // data layer
+  const authRepository = new AuthFakeApi();
+  // domain layer
+  const authHolder = new AuthHolder();
+  const loginUseCase = new LoginUseCase(authRepository, authHolder);
+  // view layer
+  const authViewModel = new AuthViewModelImpl(loginUseCase, authHolder);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container d-flex container-fluid">
+      <AuthComponent authViewModel={authViewModel} />
     </div>
   );
 }
